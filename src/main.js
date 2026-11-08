@@ -1,4 +1,7 @@
 import './style.css';
+import { inject } from '@vercel/analytics';
+
+inject();
 
 const NN=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
 const nm=p=>NN[p%12]+(Math.floor(p/12)-1);
