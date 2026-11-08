@@ -1,0 +1,16 @@
+{
+  "name": "ocarina-songbook",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "predev": "node src/generate-song-manifest.mjs",
+    "dev": "vite",
+    "prebuild": "node src/generate-song-manifest.mjs",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}

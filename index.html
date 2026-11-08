@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ocarina Songbook</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 40'%3E%3Cg fill='%23e6b422'%3E%3Cpolygon points='23,2 31,18 15,18'/%3E%3Cpolygon points='15,18 23,34 7,34'/%3E%3Cpolygon points='31,18 39,34 23,34'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<header>
+<svg width="46" height="40" viewBox="0 0 46 40" aria-hidden="true"><g fill="#e6b422" stroke="#7a5a08" stroke-width="1.5"><polygon points="23,2 31,18 15,18"/><polygon points="15,18 23,34 7,34" transform="translate(0,0)"/><polygon points="31,18 39,34 23,34"/></g></svg>
+<h1>Ocarina Songbook</h1>
+<p>Turn any MIDI into button combos for Ocarina of Time</p>
+</header>
+<main>
+<section class="panel" aria-label="Songbook">
+<h2>Songbook</h2>
+<input type="search" id="q" placeholder="Search songs…">
+<div id="list"></div>
+<div class="drop" id="drop" tabindex="0">Drop a <b>.mid</b> file here<br>or tap to import
+<input type="file" id="file" accept=".mid,.midi,audio/midi" hidden></div>
+</section>
+<section class="panel" aria-label="Score">
+<h2 id="title">Pick a song</h2>
+<div class="stats" id="stats"></div>
+<div class="row">
+<label>Console layout<select id="lay"><option value="sw2">Switch 2 (two-handed)</option><option value="3ds">Nintendo 3DS</option><option value="sw2c">Switch 2 (classic, one-handed)</option></select></label>
+<label class="chk"><input type="checkbox" id="nodp"> Stick only (no D-pad)</label>
+<label>MIDI track<select id="track"></select></label>
+<label>Transpose: <b id="shv">0</b> semitones
+<span style="display:flex;gap:6px;margin-top:4px"><button class="b alt" id="sm">−</button><button class="b alt" id="sp">+</button><button class="b alt" id="sa">Auto</button></span></label>
+<label>Speed <b id="spv">1.0×</b><input type="range" id="spd" min=".4" max="1.5" step=".05" value="1"></label>
+</div>
+<div class="row"><button class="b" id="play"></button><button class="b alt" id="copy"></button><button class="b alt" id="png"></button></div>
+<p class="note kb"><kbd>Space</kbd> play / stop
+<div class="pad">
+<svg class="pad-svg" viewBox="0 0 300 165" aria-label="Controller"><defs>
+<radialGradient id="gUse" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#fff4b8"/><stop offset=".5" stop-color="#f0c040"/><stop offset="1" stop-color="#a87414"/></radialGradient>
+<radialGradient id="gOff" cx=".35" cy=".28" r=".95"><stop offset="0" style="stop-color:var(--chip)"/><stop offset="1" style="stop-color:var(--stitch)"/></radialGradient>
+<radialGradient id="gOn" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#ffc2b5"/><stop offset=".5" stop-color="#e0442f"/><stop offset="1" stop-color="#85180d"/></radialGradient>
+<radialGradient id="gNub" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8a6c48"/><stop offset="1" stop-color="#241609"/></radialGradient></defs><g id="btns"></g></svg>
+<div><div class="now" id="now">–</div><div class="note" id="nowi"></div></div>
+</div>
+<div class="seq" id="seq"></div>
+<div class="note" id="lnote"></div>
+</section>
+</main>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
