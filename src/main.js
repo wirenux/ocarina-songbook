@@ -32,23 +32,72 @@ const TRACK_SETTINGS = {
   "The Amazing Digital Circus Theme.mid": 1,
 };
 
+const MIDI_CACHE_DB = 'ocarina-songbook';
+const MIDI_CACHE_STORE = 'midi-files';
+
+function openMidiCache() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(MIDI_CACHE_DB, 1);
+    request.onupgradeneeded = () => {
+      request.result.createObjectStore(MIDI_CACHE_STORE);
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function readMidiCache(db, filename) {
+  return new Promise((resolve, reject) => {
+    const request = db
+      .transaction(MIDI_CACHE_STORE, 'readonly')
+      .objectStore(MIDI_CACHE_STORE)
+      .get(filename);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function writeMidiCache(db, filename, tracks) {
+  return new Promise((resolve, reject) => {
+    const request = db
+      .transaction(MIDI_CACHE_STORE, 'readwrite')
+      .objectStore(MIDI_CACHE_STORE)
+      .put(tracks, filename);
+    request.onsuccess = resolve;
+    request.onerror = () => reject(request.error);
+  });
+}
+
 async function loadFolderSongs() {
+  let cache;
+
   try {
     const response = await fetch('/songs/manifest.json');
     if (!response.ok) throw new Error('MIDI manifest not found');
 
     const files = await response.json();
 
+    try {
+      cache = await openMidiCache();
+    } catch (err) {
+      console.warn('Could not open MIDI cache; loading files normally:', err);
+    }
+
     for (const file of files) {
       try {
-        const response = await fetch(
-          '/songs/' + encodeURIComponent(file)
-        );
+        let parsed = cache && await readMidiCache(cache, file);
 
-        if (!response.ok) continue;
+        if (!parsed) {
+          const response = await fetch(
+            '/songs/' + encodeURIComponent(file)
+          );
 
-        const buffer = await response.arrayBuffer();
-        const parsed = parseMidi(buffer);
+          if (!response.ok) continue;
+
+          const buffer = await response.arrayBuffer();
+          parsed = parseMidi(buffer);
+          if (cache) await writeMidiCache(cache, file, parsed);
+        }
 
         if (!parsed.length) continue;
 
